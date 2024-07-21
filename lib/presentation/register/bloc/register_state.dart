@@ -14,7 +14,13 @@ class FailedState extends RegisterState {
 }
 
 class OTPSentState extends RegisterState {
-  final String otp;
+  final String verificationId;
 
-  OTPSentState(this.otp);
+  OTPSentState(this.verificationId);
+}
+
+class RegisterSuccessfullyStat extends RegisterState{
+  final String verificationId;
+
+  RegisterSuccessfullyStat(this.verificationId);
 }

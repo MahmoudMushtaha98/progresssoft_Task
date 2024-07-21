@@ -8,7 +8,8 @@ class RegisterModel{
   final String date;
   final String gender;
   final String password;
+  final String? verificationId;
 
-  RegisterModel(this.fulName, this.phone, this.date, this.gender, this.password);
+  RegisterModel(this.fulName, this.phone, this.date, this.gender, this.password, this.verificationId);
 
 }

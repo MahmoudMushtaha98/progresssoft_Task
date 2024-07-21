@@ -16,7 +16,13 @@ class FailedEvent extends RegisterEvent {
 }
 
 class OTPSentEvent extends RegisterEvent {
-  final String otp;
+  final RegisterModel registerModel;
 
-  OTPSentEvent(this.otp);
+  OTPSentEvent(this.registerModel);
+}
+
+class RegisterSuccessfully extends RegisterEvent {
+  final String verificationId;
+
+  RegisterSuccessfully(this.verificationId);
 }

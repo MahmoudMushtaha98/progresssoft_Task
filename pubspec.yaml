@@ -40,7 +40,7 @@ dependencies:
   cloud_firestore: ^5.1.0
   flutter_bloc: ^8.1.6
   flutter_datetime_picker_plus: ^2.2.0
-
+  crypto:
 dev_dependencies:
   flutter_test:
     sdk: flutter

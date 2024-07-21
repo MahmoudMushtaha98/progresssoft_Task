@@ -13,41 +13,72 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   final _firestore = FirebaseFirestore.instance;
 
   RegisterBloc() : super(RegisterInitial()) {
-    on<StartEvent>((event, emit) {
+    on<StartEvent>((event, emit) async{
       emit(LoadingState());
-      _phoneValidation(event.registerModel);
+      await _phoneValidation(event.registerModel);
     });
 
-    on<FailedEvent>((event, emit) async {
+    on<FailedEvent>((event, emit) {
       emit(FailedState(event.error));
       print('====================================${event.error}');
     });
 
     on<OTPSentEvent>((event, emit) async {
-      emit(OTPSentState(event.otp));
-      _registerFireStore(event.otp);
+      emit(OTPSentState(event.registerModel.verificationId!));
+      await _registerFireStore(event.registerModel);
+    });
+
+    on<RegisterSuccessfully>((event, emit) {
+      emit(RegisterSuccessfullyStat(event.verificationId));
     });
   }
 
-  void _phoneValidation(RegisterModel registerModel) async {
+  Future<void> _phoneValidation(RegisterModel registerModel) async {
     try {
       await _auth.verifyPhoneNumber(
         phoneNumber: registerModel.phone,
-        verificationCompleted: (phoneAuthCredential) {},
+        verificationCompleted: (phoneAuthCredential) {
+          print('phone completed');
+        },
         verificationFailed: (error) {
+          print('verificationFailed');
+
           add(FailedEvent(error.code));
         },
         codeSent: (verificationId, forceResendingToken) {
-          add(OTPSentEvent(verificationId));
+          print(
+              'Code Sent successfully');
+          add(OTPSentEvent(RegisterModel(
+              registerModel.fulName,
+              registerModel.phone,
+              registerModel.date,
+              registerModel.gender,
+              registerModel.password,
+              verificationId)));
         },
         codeAutoRetrievalTimeout: (verificationId) {},
+        timeout: const Duration(minutes: 2),
       );
     } catch (e) {
       add(FailedEvent(e.toString()));
     }
   }
 
-  void _registerFireStore(String otp) {
-    print('============================$otp');
+  Future<void> _registerFireStore(RegisterModel registerModel) async {
+    try {
+      await _firestore.collection('User').add({
+        'name': registerModel.fulName,
+        'phone': registerModel.phone,
+        'date': registerModel.date,
+        'gender': registerModel.gender,
+        'password': registerModel.password
+      }).then(
+        (value) {
+          add(RegisterSuccessfully(registerModel.verificationId!));
+        },
+      );
+    } catch (e) {
+      print('=========================$e');
+    }
   }
 }

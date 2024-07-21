@@ -7,17 +7,16 @@ import 'package:progresssoft_task/presentation/splash/splash_screen.dart';
 
 import 'firebase_options.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: const FirebaseOptions(
-        apiKey: 'AIzaSyDA-BYkmxz9UfjGzPRsZcTYCU2YSL2gvjM',
-        appId: '1:273914847098:android:0243bb10bfbd1f16e380c3',
-        messagingSenderId: '273914847098',
-        projectId: 'progresssoft-task-83fa5'),
+    options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -40,7 +39,7 @@ class MyApp extends StatelessWidget {
       routes: {
         SplashScreen.pageRoute: (context) => const SplashScreen(),
         LoginScreen.pageRoute: (context) => const LoginScreen(),
-        RegisterScreen.pageRoute: (context) => RegisterScreen(),
+        RegisterScreen.pageRoute: (context) => const RegisterScreen(),
         OTPScreen.pageRoute: (context) => const OTPScreen(),
       },
     );

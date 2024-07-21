@@ -15,15 +15,15 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-      SplashBloc()
-        ..add(StartSplash()),
+      create: (context) => SplashBloc()..add(StartSplash()),
       child: BlocListener<SplashBloc, SplashState>(
         listener: (BuildContext context, SplashState state) {
           if (state is SplashLoaded) {
-            Timer(const Duration(seconds: 2), () =>
-                Navigator.of(context).pushReplacementNamed(
-                    LoginScreen.pageRoute),);
+            Timer(
+              const Duration(seconds: 2),
+              () => Navigator.of(context)
+                  .pushReplacementNamed(LoginScreen.pageRoute),
+            );
           }
         },
         child: Scaffold(
@@ -36,7 +36,9 @@ class SplashScreen extends StatelessWidget {
                 image: DecorationImage(
                     image: AssetImage('assets/images/ProgressSoft-Logo.png'))),
             child: Text(
-                '© 2024 ProgressSoft Corporation. All rights reserved.',style: TextStyle(fontSize: height(context)*0.015),),
+              '© 2024 ProgressSoft Corporation. All rights reserved.',
+              style: TextStyle(fontSize: height(context) * 0.015),
+            ),
           ),
         ),
       ),
