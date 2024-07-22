@@ -19,8 +19,16 @@ class OTPSentState extends RegisterState {
   OTPSentState(this.verificationId);
 }
 
-class RegisterSuccessfullyStat extends RegisterState{
+class RegisterSuccessfullyStat extends RegisterState {
   final String verificationId;
 
   RegisterSuccessfullyStat(this.verificationId);
+}
+
+class CountryCodeLoadingState extends RegisterState {}
+
+class CountryCodeSuccessfullyState extends RegisterState {
+  final String countryCode;
+
+  CountryCodeSuccessfullyState(this.countryCode);
 }

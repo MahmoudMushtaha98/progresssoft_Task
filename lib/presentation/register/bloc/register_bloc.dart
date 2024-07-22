@@ -13,6 +13,17 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   final _firestore = FirebaseFirestore.instance;
 
   RegisterBloc() : super(RegisterInitial()) {
+
+    on<CountryCodeEvent>((event, emit) async{
+      emit(CountryCodeLoadingState());
+      _gitCountryCode();
+    });
+
+    on<CountryCodeSuccessfullyEvent>((event, emit) async{
+      emit(CountryCodeSuccessfullyState(event.countryCode));
+    });
+    
+    
     on<StartEvent>((event, emit) async{
       emit(LoadingState());
       await _phoneValidation(event.registerModel);
@@ -28,7 +39,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       await _registerFireStore(event.registerModel);
     });
 
-    on<RegisterSuccessfully>((event, emit) {
+    on<RegisterSuccessfullyEvent>((event, emit) {
       emit(RegisterSuccessfullyStat(event.verificationId));
     });
   }
@@ -74,11 +85,22 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         'password': registerModel.password
       }).then(
         (value) {
-          add(RegisterSuccessfully(registerModel.verificationId!));
+          add(RegisterSuccessfullyEvent(registerModel.verificationId!));
         },
       );
     } catch (e) {
       print('=========================$e');
+    }
+  }
+
+  void _gitCountryCode() async{
+    try{
+      QuerySnapshot countryCode = await _firestore.collection('System configuration').get();
+      if(countryCode.docs.isNotEmpty){
+        add(CountryCodeSuccessfullyEvent(countryCode.docs.first['country code']));
+      }
+    }catch(e){
+      print(e);
     }
   }
 }

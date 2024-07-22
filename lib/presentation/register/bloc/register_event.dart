@@ -21,8 +21,16 @@ class OTPSentEvent extends RegisterEvent {
   OTPSentEvent(this.registerModel);
 }
 
-class RegisterSuccessfully extends RegisterEvent {
+class RegisterSuccessfullyEvent extends RegisterEvent {
   final String verificationId;
 
-  RegisterSuccessfully(this.verificationId);
+  RegisterSuccessfullyEvent(this.verificationId);
+}
+
+class CountryCodeEvent extends RegisterEvent {}
+
+class CountryCodeSuccessfullyEvent extends RegisterEvent {
+  final String countryCode;
+
+  CountryCodeSuccessfullyEvent(this.countryCode);
 }

@@ -31,6 +31,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool dateTimeValid = false;
 
   @override
+  void initState() {
+    BlocProvider.of<RegisterBloc>(context).add(CountryCodeEvent());
+    super.initState();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
@@ -41,24 +48,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
               if (state is RegisterSuccessfullyStat) {
                 Navigator.pushNamed(context, OTPScreen.pageRoute,
                     arguments: state.verificationId);
-              }if(state is FailedState){
-                if(state.error.contains('network-request-failed')){
+              }
+              if (state is FailedState) {
+                if (state.error.contains('network-request-failed')) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Connection Loss'),
                     ),
                   );
-                }else{
+                } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Error Occurred'),
                     ),
                   );
                 }
+              } else if (state is CountryCodeSuccessfullyState) {
+                phone.text = state.countryCode;
               }
             },
             builder: (context, state) {
-              if (state is LoadingState || state is OTPSentState) {
+              if (state is LoadingState ||
+                  state is OTPSentState ||
+                  state is CountryCodeLoadingState) {
                 return SizedBox(
                   height: height(context),
                   child: const Center(
@@ -82,7 +94,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: height(context) * 0.05,
                   ),
                   TextFormFieldWidget(
-                    label: 'mobile number',
                     textInputType: TextInputType.phone,
                     controller: phone,
                     validator: (p0) => phoneValidator(p0),
@@ -119,9 +130,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Text(
                         dateTime,
                         style: TextStyle(
-                            color: dateTimeValid
-                                ? Colors.black
-                                : Colors.black45),
+                            color:
+                                dateTimeValid ? Colors.black : Colors.black45),
                       ),
                     ),
                   ),
@@ -129,8 +139,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: height(context) * 0.05,
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: width(context) * 0.03),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: width(context) * 0.03),
                     alignment: Alignment.centerLeft,
                     width: width(context) * 0.9,
                     height: height(context) * 0.055,
@@ -197,8 +207,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         if (_key.currentState!.validate() &&
                             !dateTime.contains('dd/mm/yy') &&
                             dropdownValue != dropdownList.first) {
-                          BlocProvider.of<RegisterBloc>(context).add(
-                              StartEvent(RegisterModel(
+                          BlocProvider.of<RegisterBloc>(context).add(StartEvent(
+                              RegisterModel(
                                   fullName.text,
                                   phone.text,
                                   dateTime.toString(),
