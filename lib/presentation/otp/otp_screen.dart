@@ -29,7 +29,6 @@ class _OTPScreenState extends State<OTPScreen> {
   @override
   void didChangeDependencies() {
     verificationId = ModalRoute.of(context)?.settings.arguments as String;
-    print('=================================$verificationId');
     super.didChangeDependencies();
   }
 
@@ -37,89 +36,101 @@ class _OTPScreenState extends State<OTPScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: BlocProvider(
-          create: (context) => OtpBloc(),
-          child: BlocConsumer<OtpBloc, OtpState>(
-            listener: (context, state) {
-              if (state is SuccessfullyState) {
-                Navigator.pushNamed(context, LoginScreen.pageRoute);
-              }
-            },
-            builder: (context, state) {
-              if (state is LoadingState) {
-                return SizedBox(
-                  height: height(context),
-                  child: const Center(
-                    child: CircularProgressIndicator(),
+        child: BlocConsumer<OtpBloc, OtpState>(
+          listener: (context, state) {
+            if (state is SuccessfullyState) {
+              Navigator.pushNamed(context, LoginScreen.pageRoute);
+            }if(state is FailedState){
+              if(state.error.contains('invalid-verification-code')) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Not Correct'),
+                ),
+              );
+              }else if(state.error.contains('network-request-failed')){
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Connection Loss'),
                   ),
                 );
               }
-              return Column(
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    height: height(context) * 0.3,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      OTPTextField(
-                        controller: controller1,
-                      ),
-                      OTPTextField(
-                        controller: controller2,
-                      ),
-                      OTPTextField(
-                        controller: controller3,
-                      ),
-                      OTPTextField(
-                        controller: controller4,
-                      ),
-                      OTPTextField(
-                        controller: controller5,
-                      ),
-                      OTPTextField(
-                        controller: controller6,
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: height(context) * 0.3,
-                  ),
-                  SizedBox(
-                    width: width(context) * 0.8,
-                    height: height(context) * 0.06,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          print(verificationId);
-                          String smsCode = controller1.text +
-                              controller2.text +
-                              controller3.text +
-                              controller4.text +
-                              controller5.text +
-                              controller6.text;
 
-                          BlocProvider.of<OtpBloc>(context).add(
-                              OTPValidationEvent(
-                                  CredentialModel(verificationId, smsCode)));
-
-                          if (state is SuccessfullyState) {
-                            print('Successfully');
-                            // Navigator.pushReplacementNamed(
-                            //     context, LoginScreen.pageRoute);
-                          }
-                        },
-                        child: Text(
-                          'Confirm',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: height(context) * 0.02),
-                        )),
-                  )
-                ],
+            }
+          },
+          builder: (context, state) {
+            if (state is LoadingState) {
+              return SizedBox(
+                height: height(context),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
               );
-            },
-          ),
+            }
+            return Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  height: height(context) * 0.3,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    OTPTextField(
+                      controller: controller1,
+                    ),
+                    OTPTextField(
+                      controller: controller2,
+                    ),
+                    OTPTextField(
+                      controller: controller3,
+                    ),
+                    OTPTextField(
+                      controller: controller4,
+                    ),
+                    OTPTextField(
+                      controller: controller5,
+                    ),
+                    OTPTextField(
+                      controller: controller6,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: height(context) * 0.3,
+                ),
+                SizedBox(
+                  width: width(context) * 0.8,
+                  height: height(context) * 0.06,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        print(verificationId);
+                        String smsCode = controller1.text +
+                            controller2.text +
+                            controller3.text +
+                            controller4.text +
+                            controller5.text +
+                            controller6.text;
+
+                        BlocProvider.of<OtpBloc>(context).add(
+                            OTPValidationEvent(
+                                CredentialModel(verificationId, smsCode)));
+
+                        if (state is SuccessfullyState) {
+                          print('Successfully');
+                          // Navigator.pushReplacementNamed(
+                          //     context, LoginScreen.pageRoute);
+                        }
+                      },
+                      child: Text(
+                        'Confirm',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: height(context) * 0.02),
+                      )),
+                )
+              ],
+            );
+          },
         ),
       ),
     );

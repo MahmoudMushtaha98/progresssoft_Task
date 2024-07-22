@@ -12,3 +12,9 @@ class OTPValidationEvent extends OtpEvent{
 
 class OTPValidateEvent extends OtpEvent{}
 
+class FailedEvent extends OtpEvent{
+  final String error;
+
+  FailedEvent(this.error);
+}
+

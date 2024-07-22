@@ -5,4 +5,10 @@ sealed class SplashState {}
 
 final class SplashInitial extends SplashState {}
 
-class SplashLoaded extends SplashState {}
+class SuccessfullyState extends SplashState {
+  final String data;
+
+  SuccessfullyState(this.data);
+}
+
+class FirstVisitState extends SplashState {}

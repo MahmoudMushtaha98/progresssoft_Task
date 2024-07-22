@@ -19,6 +19,11 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
     on<OTPValidateEvent>((event, emit) {
       emit(SuccessfullyState());
     });
+
+    on<FailedEvent>((event, emit) {
+      print(event.error);
+      emit(FailedState(event.error));
+    });
   }
 
   void _signInCredential(CredentialModel credentialModel) async {
@@ -29,7 +34,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
       add(OTPValidateEvent());
     } catch (e) {
       if(e is FirebaseAuthException){
-        print('=======================================${e.code}');
+        add(FailedEvent(e.code));
       }
     }
   }

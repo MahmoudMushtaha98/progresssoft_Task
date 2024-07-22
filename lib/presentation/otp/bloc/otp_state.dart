@@ -10,3 +10,11 @@ class LoadingState extends OtpState{
 }
 
 class SuccessfullyState extends OtpState{}
+
+
+class FailedState extends OtpState{
+
+  final String error;
+
+  FailedState(this.error);
+}
