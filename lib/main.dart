@@ -1,68 +1,47 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:progresssoft_task/presentation/home/bloc/home_bloc.dart';
-import 'package:progresssoft_task/presentation/home/navigator.dart';
-import 'package:progresssoft_task/presentation/login/bloc/login_bloc.dart';
-import 'package:progresssoft_task/presentation/login/login_screen.dart';
-import 'package:progresssoft_task/presentation/otp/bloc/otp_bloc.dart';
-import 'package:progresssoft_task/presentation/otp/otp_screen.dart';
-import 'package:progresssoft_task/presentation/register/bloc/register_bloc.dart';
-import 'package:progresssoft_task/presentation/register/register_screen.dart';
-import 'package:progresssoft_task/presentation/splash/bloc/splash_bloc.dart';
-import 'package:progresssoft_task/presentation/splash/splash_screen.dart';
-
-import 'firebase_options.dart';
+import 'package:progresssoft_task/bloc/my_app_bloc.dart';
+import 'constant/app_route.dart';
+import 'constant/build_theme_data.dart';
+import 'constant/initialize_my_app.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
+  await initializeMyApp();
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  String countryCode = 'en';
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-          elevatedButtonTheme: const ElevatedButtonThemeData(
-              style: ButtonStyle(
-                  elevation: WidgetStatePropertyAll(3),
-                  backgroundColor: WidgetStatePropertyAll(Color(0xff003466)),
-                  textStyle:
-                      WidgetStatePropertyAll(TextStyle(color: Colors.white)),
-                  shape: WidgetStatePropertyAll(
-                    ContinuousRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                  )))),
-      debugShowCheckedModeBanner: false,
-      routes: {
-        SplashScreen.pageRoute: (context) => BlocProvider(
-          create: (context) => SplashBloc(),
-          child: const SplashScreen(),
+    return BlocProvider(
+      create: (context) => MyAppBloc(),
+      child: BlocListener<MyAppBloc, MyAppState>(
+        listener: (context, state) {
+          if (state is ChangeLanguageState) {
+            setState(() {
+              countryCode = state.countryCode;
+            });
+          }
+        },
+        child: MaterialApp(
+          theme: buildThemeData(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: Locale(countryCode),
+          debugShowCheckedModeBanner: false,
+          routes: routes(),
         ),
-        LoginScreen.pageRoute: (context) => BlocProvider(
-              create: (context) => LoginBloc(),
-              child: const LoginScreen(),
-            ),
-        RegisterScreen.pageRoute: (context) => BlocProvider(
-              create: (context) => RegisterBloc(),
-              child: const RegisterScreen(),
-            ),
-        OTPScreen.pageRoute: (context) => BlocProvider(
-              create: (context) => OtpBloc(),
-              child: const OTPScreen(),
-            ),
-        NavigatorScreen.pageRoute: (context) => BlocProvider(
-              create: (context) => HomeBloc(),
-              child: const NavigatorScreen(),
-            ),
-      },
+      ),
     );
   }
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:progresssoft_task/constant/diriction.dart';
+import 'package:progresssoft_task/constant/my_color.dart';
 import 'package:progresssoft_task/presentation/home/bloc/home_bloc.dart';
 import 'package:progresssoft_task/presentation/login/login_screen.dart';
-import 'package:progresssoft_task/presentation/model/register_model.dart';
-import '../../widget/data_row.dart';
+import '../../../utills/model/register_model.dart';
+import '../../widget/data_row_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key, required this.registerModel});
@@ -38,7 +40,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               CircleAvatar(
                 radius: width(context) * 0.2,
-                backgroundColor: const Color(0xffD9D9D9),
+                backgroundColor: displayDataLightColor,
               ),
               Container(
                 margin: const EdgeInsets.only(top: 30),
@@ -50,7 +52,7 @@ class ProfileScreen extends StatelessWidget {
                     gradient: LinearGradient(
                         end: Alignment.topCenter,
                         begin: Alignment.bottomCenter,
-                        colors: [Color(0xff737373), Color(0xffD9D9D9)]),
+                        colors: [displayDataDarkColor, displayDataLightColor]),
                     boxShadow: [
                       BoxShadow(
                           color: Colors.grey,
@@ -62,23 +64,23 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     DataRowWidget(
                       text: registerModel.fulName,
-                      type: 'Name: ',
+                      type: '${AppLocalizations.of(context)!.name}: ',
                     ),
                     DataRowWidget(
                       text: registerModel.phone,
-                      type: 'Phone: ',
+                      type: '${AppLocalizations.of(context)!.phone}: ',
                     ),
                     DataRowWidget(
                       text: registerModel.date,
-                      type: 'Date: ',
+                      type: '${AppLocalizations.of(context)!.date}: ',
                     ),
                     DataRowWidget(
                       text: registerModel.gender,
-                      type: 'Gender: ',
+                      type: '${AppLocalizations.of(context)!.gender}: ',
                     ),
-                    const DataRowWidget(
+                    DataRowWidget(
                       text: '*******',
-                      type: 'Password: ',
+                      type: '${AppLocalizations.of(context)!.password}: ',
                     ),
                   ],
                 ),
@@ -92,9 +94,9 @@ class ProfileScreen extends StatelessWidget {
                 },
                 style: const ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(Colors.red)),
-                child: const Text(
-                  'Logout',
-                  style: TextStyle(color: Colors.white),
+                child: Text(
+                  AppLocalizations.of(context)!.logout,
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ],

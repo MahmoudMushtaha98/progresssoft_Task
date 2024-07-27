@@ -11,7 +11,7 @@ class DataLoadedEvent extends HomeEvent {
   DataLoadedEvent(this.postModel);
 }
 
-class SearchEvent extends HomeEvent{
+class SearchEvent extends HomeEvent {
   final String textSearch;
   final List<PostModel> postModel;
 
@@ -21,4 +21,3 @@ class SearchEvent extends HomeEvent{
 class LogoutEvent extends HomeEvent {}
 
 class SuccessfullyEvent extends HomeEvent {}
-

@@ -1,13 +1,11 @@
 import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:progresssoft_task/constant/diriction.dart';
 import 'package:progresssoft_task/presentation/login/login_screen.dart';
-import 'package:progresssoft_task/presentation/model/credential_model.dart';
 import 'package:progresssoft_task/presentation/otp/bloc/otp_bloc.dart';
 
+import '../../utills/model/credential_model.dart';
 import 'otp widget/otp_text_field.dart';
 
 class OTPScreen extends StatefulWidget {
@@ -20,12 +18,12 @@ class OTPScreen extends StatefulWidget {
 }
 
 class _OTPScreenState extends State<OTPScreen> {
-  TextEditingController controller1 = TextEditingController();
-  TextEditingController controller2 = TextEditingController();
-  TextEditingController controller3 = TextEditingController();
-  TextEditingController controller4 = TextEditingController();
-  TextEditingController controller5 = TextEditingController();
-  TextEditingController controller6 = TextEditingController();
+  final TextEditingController controller1 = TextEditingController();
+  final TextEditingController controller2 = TextEditingController();
+  final TextEditingController controller3 = TextEditingController();
+  final TextEditingController controller4 = TextEditingController();
+  final TextEditingController controller5 = TextEditingController();
+  final TextEditingController controller6 = TextEditingController();
 
   late final String verificationId;
 
@@ -33,6 +31,17 @@ class _OTPScreenState extends State<OTPScreen> {
   void didChangeDependencies() {
     verificationId = ModalRoute.of(context)?.settings.arguments as String;
     super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    controller1.dispose();
+    controller2.dispose();
+    controller3.dispose();
+    controller4.dispose();
+    controller5.dispose();
+    controller6.dispose();
+    super.dispose();
   }
 
   @override
@@ -176,7 +185,6 @@ class _OTPScreenState extends State<OTPScreen> {
                     height: height(context) * 0.06,
                     child: ElevatedButton(
                         onPressed: () {
-                          print(verificationId);
                           String smsCode = controller1.text +
                               controller2.text +
                               controller3.text +
@@ -187,12 +195,6 @@ class _OTPScreenState extends State<OTPScreen> {
                           BlocProvider.of<OtpBloc>(context).add(
                               OTPValidationEvent(
                                   CredentialModel(verificationId, smsCode)));
-
-                          if (state is SuccessfullyState) {
-                            print('Successfully');
-                            // Navigator.pushReplacementNamed(
-                            //     context, LoginScreen.pageRoute);
-                          }
                         },
                         child: Text(
                           'Confirm',

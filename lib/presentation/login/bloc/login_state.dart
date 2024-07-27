@@ -12,3 +12,5 @@ class SuccessfullyState extends LoginState{
 
   SuccessfullyState(this.registerModel);
 }
+
+class FailedState extends LoginState{}

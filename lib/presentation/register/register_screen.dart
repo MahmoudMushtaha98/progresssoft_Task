@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:progresssoft_task/constant/diriction.dart';
-import 'package:progresssoft_task/presentation/model/register_model.dart';
 import 'package:progresssoft_task/presentation/register/bloc/register_bloc.dart';
-import 'package:progresssoft_task/presentation/widget/text_form.dart';
-
+import 'package:progresssoft_task/presentation/widget/text_form_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../constant/validation.dart';
+import '../../utills/model/register_model.dart';
 import '../otp/otp_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -24,9 +25,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController password = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
 
-  List<String> dropdownList = ['Gender', 'Male', 'Female'];
-  String dropdownValue = 'Gender';
-  String dateTime = 'dd/mm/yy';
+  late List<String> dropdownList;
+  late String dropdownValue;
+  late String dateTime;
 
   bool dateTimeValid = false;
 
@@ -36,6 +37,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    fullName.dispose();
+    phone.dispose();
+    password.dispose();
+    confirmPassword.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    dateTime = AppLocalizations.of(context)!.dateTime;
+    dropdownList = [
+      AppLocalizations.of(context)!.gender,
+      AppLocalizations.of(context)!.male,
+      AppLocalizations.of(context)!.female
+    ];
+    dropdownValue = AppLocalizations.of(context)!.gender;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,9 +107,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: height(context) * 0.1,
                   ),
                   TextFormFieldWidget(
-                    label: 'full name',
+                    label: AppLocalizations.of(context)!.fullName,
                     controller: fullName,
-                    validator: (p0) => nameValidator(p0),
+                    validator: (p0) => nameValidator(p0?.trim()),
                   ),
                   SizedBox(
                     height: height(context) * 0.05,
@@ -96,7 +117,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   TextFormFieldWidget(
                     textInputType: TextInputType.phone,
                     controller: phone,
-                    validator: (p0) => phoneValidator(p0),
+                    validator: (p0) => phoneValidator(p0?.trim()),
                   ),
                   SizedBox(
                     height: height(context) * 0.05,
@@ -182,19 +203,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: height(context) * 0.05,
                   ),
                   TextFormFieldWidget(
-                    label: 'Password',
+                    label: AppLocalizations.of(context)!.password,
                     obscureText: true,
                     controller: password,
-                    validator: (p0) => passwordValidator(p0),
+                    validator: (p0) => passwordValidator(p0?.trim()),
                   ),
                   SizedBox(
                     height: height(context) * 0.05,
                   ),
                   TextFormFieldWidget(
-                    label: 'Confirm password',
+                    label: AppLocalizations.of(context)!.rePassword,
                     obscureText: true,
                     controller: confirmPassword,
-                    validator: (p0) => confirmPasswordValidator(p0),
+                    validator: (p0) =>
+                        confirmPasswordValidator(p0?.trim(), password.text),
                   ),
                   SizedBox(
                     height: height(context) * 0.05,
@@ -209,16 +231,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             dropdownValue != dropdownList.first) {
                           BlocProvider.of<RegisterBloc>(context).add(StartEvent(
                               RegisterModel(
-                                  fullName.text,
-                                  phone.text,
+                                  fullName.text.trim(),
+                                  phone.text.trim(),
                                   dateTime.toString(),
                                   dropdownValue,
-                                  password.text,
+                                  password.text.trim(),
                                   null)));
                         }
                       },
                       child: Text(
-                        'Register',
+                        AppLocalizations.of(context)!.register,
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: height(context) * 0.02),
@@ -232,49 +254,5 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     );
-  }
-
-  String? nameValidator(String? name) {
-    final fullNameRegExp = RegExp(r"^[a-zA-Z]+(?: [a-zA-Z]+)+$");
-    if (name == null || name.isEmpty) {
-      return 'Enter your name';
-    } else if (fullNameRegExp.hasMatch(name)) {
-      return null;
-    } else {
-      return '';
-    }
-  }
-
-  String? phoneValidator(String? phone) {
-    final phoneNumberRegExp = RegExp(r"^\+9627\d{8}$");
-    if (phone == null || phone.isEmpty) {
-      return 'Enter your number';
-    } else if (phoneNumberRegExp.hasMatch(phone)) {
-      return null;
-    } else {
-      return '';
-    }
-  }
-
-  String? passwordValidator(String? password) {
-    final passwordRegExp = RegExp(r"^.{6,}$");
-
-    if (password == null || password.isEmpty) {
-      return 'Enter your password';
-    } else if (passwordRegExp.hasMatch(password)) {
-      return null;
-    } else if (password.length < 6) {
-      return 'Minimum 6 diets';
-    } else {
-      return '';
-    }
-  }
-
-  String? confirmPasswordValidator(String? confirmPassword) {
-    if (confirmPassword != password.text) {
-      return 'not match';
-    } else {
-      return null;
-    }
   }
 }

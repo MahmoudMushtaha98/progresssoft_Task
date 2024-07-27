@@ -1,9 +1,10 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../model/register_model.dart';
+import '../../../utills/model/register_model.dart';
+
 
 part 'login_event.dart';
 
@@ -24,7 +25,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     });
 
     on<LogInFailed>((event, emit) {
-      print(event.error);
+      emit(FailedState());
     });
   }
 
@@ -64,7 +65,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       await sharedPreferences.setString('data',
           '{"name":"${r.fulName}","phone":"${r.phone}","date":"${r.date}","gender":"${r.gender}","password":"${r.password}"}');
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }

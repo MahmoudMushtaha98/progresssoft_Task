@@ -1,0 +1,19 @@
+{
+  "welcomeTo": "Welcome To",
+  "progressSoft": "ProgressSoft",
+  "mobileNumber": "Mobile Number",
+  "password": "Password",
+  "login": "Login",
+  "register": "Register",
+  "gender": "Gender",
+  "male": "Male",
+  "female": "Female",
+  "fullName":"Full Name",
+  "dateTime": "dd/mm/yy",
+  "rePassword": "Re-Password",
+  "confirm": "Confirm",
+  "name": "Name",
+  "phone": "Phone",
+  "date": "Date",
+  "logout": "Logout"
+}

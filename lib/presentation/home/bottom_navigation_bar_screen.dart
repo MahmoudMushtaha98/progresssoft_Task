@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:progresssoft_task/bloc/my_app_bloc.dart';
 import 'package:progresssoft_task/constant/my_color.dart';
 import 'package:progresssoft_task/presentation/home/bloc/home_bloc.dart';
 import 'package:progresssoft_task/presentation/home/widget/home_screen.dart';
 import 'package:progresssoft_task/presentation/home/widget/profile_screen.dart';
-import 'package:progresssoft_task/presentation/model/register_model.dart';
+import 'package:progresssoft_task/utills/model/language_model.dart';
 
-class NavigatorScreen extends StatefulWidget {
-  const NavigatorScreen({super.key});
+import '../../utills/model/register_model.dart';
+
+class BottomNavigationBarScreen extends StatefulWidget {
+  const BottomNavigationBarScreen({super.key});
 
   static const String pageRoute = '/navigator';
 
   @override
-  State<NavigatorScreen> createState() => _NavigatorScreenState();
+  State<BottomNavigationBarScreen> createState() =>
+      _BottomNavigationBarScreenState();
 }
 
-class _NavigatorScreenState extends State<NavigatorScreen> {
+class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
   int selectedIndex = 0;
   RegisterModel? registerModel;
 
@@ -37,6 +41,28 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
       appBar: AppBar(
         backgroundColor: progressColor,
         automaticallyImplyLeading: false,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: DropdownButton(
+              icon: Icon(
+                Icons.language,
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+              items: LanguageModel.languageList()
+                  .map<DropdownMenuItem<LanguageModel>>((LanguageModel value) {
+                return DropdownMenuItem<LanguageModel>(
+                  value: value,
+                  child: Text(value.name),
+                );
+              }).toList(),
+              onChanged: (value) {
+                BlocProvider.of<MyAppBloc>(context)
+                    .add(ChangeLanguageEvent(value!.languageCode));
+              },
+            ),
+          )
+        ],
       ),
       bottomNavigationBar: NavigationBar(
         backgroundColor: progressColor,

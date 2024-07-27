@@ -1,0 +1,19 @@
+{
+  "welcomeTo": "مرحبا في",
+  "progressSoft": "ProgressSoft",
+  "mobileNumber": "رقم الهاتف",
+  "password": "كلمة المرور",
+  "login": "تسجيل الدخول",
+  "register": "تسجيل",
+  "gender": "الجنس",
+  "male": "ذكر",
+  "female": "انثى",
+  "fullName":"الاسم الكامل",
+  "dateTime": "يوم/شهر/سنة",
+  "rePassword": "تأكيد كلمة المرور",
+  "confirm": "التالي",
+  "name": "الاسم",
+  "phone": "رقم الهاتف",
+  "date": "تاريخ الميلاد",
+  "logout": "تسجيل الخروج"
+}

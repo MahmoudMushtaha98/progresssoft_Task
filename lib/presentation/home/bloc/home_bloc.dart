@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:meta/meta.dart';
-import 'package:progresssoft_task/presentation/model/post_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../utills/model/post_model.dart';
 
 part 'home_event.dart';
 
@@ -48,11 +49,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       if (response.statusCode == 200) {
         List<PostModel> posts = postModelFromJson(json.encode(response.data));
         add(DataLoadedEvent(posts));
-      } else {
-        print(response.statusMessage);
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -79,7 +80,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       },);
 
     }catch(e){
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 

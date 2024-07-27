@@ -1,8 +1,9 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:meta/meta.dart';
-import 'package:progresssoft_task/presentation/model/register_model.dart';
+
+import '../../../utills/model/register_model.dart';
 
 part 'register_event.dart';
 
@@ -31,7 +32,6 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
     on<FailedEvent>((event, emit) {
       emit(FailedState(event.error));
-      print('====================================${event.error}');
     });
 
     on<OTPSentEvent>((event, emit) async {
@@ -49,16 +49,11 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       await _auth.verifyPhoneNumber(
         phoneNumber: registerModel.phone,
         verificationCompleted: (phoneAuthCredential) {
-          print('phone completed');
         },
         verificationFailed: (error) {
-          print('verificationFailed');
-
           add(FailedEvent(error.code));
         },
         codeSent: (verificationId, forceResendingToken) {
-          print(
-              'Code Sent successfully');
           add(OTPSentEvent(RegisterModel(
               registerModel.fulName,
               registerModel.phone,
@@ -89,7 +84,9 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         },
       );
     } catch (e) {
-      print('=========================$e');
+      if (kDebugMode) {
+        print('=========================$e');
+      }
     }
   }
 
@@ -100,7 +97,9 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         add(CountryCodeSuccessfullyEvent(countryCode.docs.first['country code']));
       }
     }catch(e){
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }

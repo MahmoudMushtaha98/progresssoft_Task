@@ -1,12 +1,10 @@
-import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:progresssoft_task/constant/diriction.dart';
-import 'package:progresssoft_task/presentation/home/navigator.dart';
-import 'package:progresssoft_task/presentation/model/register_model.dart';
+import 'package:progresssoft_task/presentation/home/bottom_navigation_bar_screen.dart';
 
+import '../../utills/model/register_model.dart';
 import '../login/login_screen.dart';
 import 'bloc/splash_bloc.dart';
 
@@ -40,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
               null);
           Navigator.pushNamedAndRemoveUntil(
             context,
-            NavigatorScreen.pageRoute,
+            BottomNavigationBarScreen.pageRoute,
             arguments: registerModel,
             (route) => false,
           );

@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:progresssoft_task/constant/diriction.dart';
 import 'package:progresssoft_task/constant/my_color.dart';
-import 'package:progresssoft_task/presentation/home/navigator.dart';
+import 'package:progresssoft_task/presentation/home/bottom_navigation_bar_screen.dart';
 import 'package:progresssoft_task/presentation/login/bloc/login_bloc.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../register/register_screen.dart';
-import '../widget/text_form.dart';
+import '../widget/custom_button_widget.dart';
+import '../widget/text_form_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,9 +19,15 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   TextEditingController phone = TextEditingController();
   TextEditingController password = TextEditingController();
+
+  @override
+  void dispose() {
+    phone.dispose();
+    password.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
           if (state is SuccessfullyState) {
             Navigator.pushNamedAndRemoveUntil(
               context,
-              NavigatorScreen.pageRoute,
+              BottomNavigationBarScreen.pageRoute,
               arguments: state.registerModel,
               (route) => false,
             );
@@ -58,12 +65,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 Text.rich(
                     textAlign: TextAlign.center,
                     TextSpan(
-                        text: 'Welcom To\n',
+                        text: '${AppLocalizations.of(context)!.welcomeTo}\n',
                         style: TextStyle(fontSize: width(context) * 0.1),
-                        children: const [
+                        children: [
                           TextSpan(
-                              text: 'ProgressSoft',
-                              style: TextStyle(
+                              text: AppLocalizations.of(context)!.progressSoft,
+                              style: const TextStyle(
                                   color: progressColor,
                                   fontWeight: FontWeight.bold))
                         ])),
@@ -71,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: height(context) * 0.08,
                 ),
                 TextFormFieldWidget(
-                  label: 'Mobile Number',
+                  label: AppLocalizations.of(context)!.mobileNumber,
                   textInputType: TextInputType.phone,
                   controller: phone,
                 ),
@@ -79,35 +86,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: height(context) * 0.03,
                 ),
                 TextFormFieldWidget(
-                  label: 'Password',
+                  label: AppLocalizations.of(context)!.password,
                   obscureText: true,
                   controller: password,
                 ),
                 SizedBox(
                   height: height(context) * 0.05,
                 ),
-                SizedBox(
-                  width: width(context) * 0.8,
-                  height: height(context) * 0.05,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      BlocProvider.of<LoginBloc>(context)
-                          .add(StartLogInEvent(phone.text, password.text));
-                    },
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: height(context) * 0.02),
-                    ),
-                  ),
+                CustomButtonWidget(
+                  callback: () {
+                    BlocProvider.of<LoginBloc>(context)
+                        .add(StartLogInEvent(phone.text, password.text));
+                  },
+                  text: AppLocalizations.of(context)!.login,
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed(RegisterScreen.pageRoute);
                   },
                   child: Text(
-                    'Register',
+                    AppLocalizations.of(context)!.register,
                     style: TextStyle(
                         decoration: TextDecoration.underline,
                         fontSize: height(context) * 0.02),

@@ -1,7 +1,8 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:meta/meta.dart';
-import 'package:progresssoft_task/presentation/model/credential_model.dart';
+
+import '../../../utills/model/credential_model.dart';
 
 part 'otp_event.dart';
 
@@ -21,7 +22,6 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
     });
 
     on<FailedEvent>((event, emit) {
-      print(event.error);
       emit(FailedState(event.error));
     });
   }

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,16 +31,17 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
         const Duration(seconds: 2),
         () async {
           data = sharedPreferences.getString('data');
-          if(data !=null){
+          if (data != null) {
             add(FitchSuccessfullyEvent(data!));
-          }else{
+          } else {
             add(FirstVisitEvent());
           }
-
         },
       );
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }
